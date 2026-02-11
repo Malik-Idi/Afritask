@@ -2,95 +2,72 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Espace Employeur | Test-Flow</title>
+    <title>Créer une campagne | Afritask</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
 </head>
-<body class="bg-slate-50">
-    <nav class="bg-white shadow-sm p-4 flex justify-between items-center px-10">
-        <h1 class="text-xl font-bold text-blue-600">TEST-FLOW <span class="text-slate-400 text-sm">PRO</span></h1>
-        <div class="flex items-center gap-4">
-            <span class="text-sm text-slate-500">Compte Entreprise</span>
-            <div class="w-10 h-10 bg-slate-200 rounded-full"></div>
-        </div>
-    </nav>
-
-    <div class="max-w-4xl mx-auto mt-10 p-6">
-        <h2 class="text-2xl font-bold mb-6">Créer une nouvelle campagne de test</h2>
+<body class="bg-slate-50 min-h-screen">
+    <div class="max-w-3xl mx-auto py-12 px-6">
+        <a href="../index.html" class="text-indigo-600 font-bold mb-8 inline-block"><i class="fas fa-arrow-left mr-2"></i> Retour</a>
         
-        <div class="bg-white p-8 rounded-2xl shadow-xl border border-slate-200">
-            <div class="grid grid-cols-1 gap-6">
+        <div class="bg-white rounded-3xl shadow-xl p-10 border border-slate-100">
+            <h1 class="text-3xl font-black text-slate-800 mb-2">Nouvelle Campagne</h1>
+            <p class="text-slate-500 mb-8">Remplissez les détails pour lancer vos tests UX.</p>
+
+            <div class="space-y-6">
                 <div>
-                    <label class="block text-sm font-medium text-slate-700">Nom du projet</label>
-                    <input type="text" id="projName" placeholder="Ex: Ma nouvelle Boutique E-commerce" class="w-full mt-1 p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Nom du Projet</label>
+                    <input type="text" id="nom" placeholder="Ex: Refonte Dashboard" class="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-indigo-500 rounded-2xl outline-none transition">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-slate-700">URL du site à tester</label>
-                    <input type="url" id="projUrl" placeholder="https://mon-site.com" class="w-full mt-1 p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">URL du site</label>
+                    <input type="url" id="url" placeholder="https://votre-site.com" class="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-indigo-500 rounded-2xl outline-none transition">
                 </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700">Nombre de testeurs requis</label>
-                        <input type="number" id="nbTesteurs" value="5" class="w-full mt-1 p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" oninput="calculerPrix()">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700">Budget par testeur (Fixé)</label>
-                        <input type="text" value="300 F CFA" disabled class="w-full mt-1 p-3 bg-slate-100 border rounded-xl text-slate-500 font-bold">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Nombre de testeurs (300 F / testeur)</label>
+                    <input type="number" id="testeurs" value="1" min="1" oninput="calculer()" class="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-indigo-500 rounded-2xl outline-none transition">
+                </div>
+
+                <div class="bg-indigo-900 text-white p-6 rounded-2xl">
+                    <div class="flex justify-between mb-2 opacity-80"><span>Coût Testeurs :</span> <span id="coutT">300 F</span></div>
+                    <div class="flex justify-between mb-4 opacity-80"><span>Frais Service (25%) :</span> <span id="fraisP">75 F</span></div>
+                    <div class="flex justify-between text-2xl font-black border-t border-indigo-700 pt-4">
+                        <span>TOTAL À PAYER</span>
+                        <span id="total">375 F CFA</span>
                     </div>
                 </div>
 
-                <div class="bg-blue-50 p-6 rounded-xl border border-blue-100">
-                    <div class="flex justify-between mb-2">
-                        <span>Coût pour les testeurs :</span>
-                        <span id="coutTesteurs">1500 F CFA</span>
-                    </div>
-                    <div class="flex justify-between mb-2 font-semibold">
-                        <span>Frais de plateforme (25%) :</span>
-                        <span id="fraisPlateforme">375 F CFA</span>
-                    </div>
-                    <hr class="my-2">
-                    <div class="flex justify-between text-xl font-bold text-blue-600">
-                        <span>TOTAL À PAYER :</span>
-                        <span id="totalPayer">1875 F CFA</span>
-                    </div>
-                </div>
-
-                <button onclick="simulerPaiement()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition shadow-lg shadow-blue-200">
-                    <i class="fas fa-credit-card mr-2"></i> PAYER ET ENVOYER POUR VALIDATION
+                <button onclick="payer()" class="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black text-xl hover:bg-indigo-700 transition shadow-lg shadow-indigo-200">
+                    <i class="fas fa-lock mr-2"></i> PAYER ET PUBLIER
                 </button>
             </div>
         </div>
     </div>
 
     <script>
-        function calculerPrix() {
-            let n = document.getElementById('nbTesteurs').value;
-            let testeursTotal = n * 300;
-            let frais = testeursTotal * 0.25;
-            let total = testeursTotal + frais;
-
-            document.getElementById('coutTesteurs').innerText = testeursTotal + " F CFA";
-            document.getElementById('fraisPlateforme').innerText = frais + " F CFA";
-            document.getElementById('totalPayer').innerText = total + " F CFA";
+        function calculer() {
+            let n = document.getElementById('testeurs').value;
+            let coutT = n * 300;
+            let frais = coutT * 0.25;
+            document.getElementById('coutT').innerText = coutT + " F";
+            document.getElementById('fraisP').innerText = frais + " F";
+            document.getElementById('total').innerText = (coutT + frais) + " F CFA";
         }
 
-        function simulerPaiement() {
+        function payer() {
             const mission = {
                 id: Date.now(),
-                nom: document.getElementById('projName').value,
-                url: document.getElementById('projUrl').value,
-                testeurs: document.getElementById('nbTesteurs').value,
-                fraisAdmin: (document.getElementById('nbTesteurs').value * 300) * 0.25,
+                nom: document.getElementById('nom').value,
+                url: document.getElementById('url').value,
+                testeurs: document.getElementById('testeurs').value,
+                fraisAdmin: (document.getElementById('testeurs').value * 300) * 0.25,
                 statut: 'en_attente'
             };
-
-            // Sauvegarde locale pour simulation
             let missions = JSON.parse(localStorage.getItem('missions_pending') || "[]");
             missions.push(mission);
             localStorage.setItem('missions_pending', JSON.stringify(missions));
-
-            alert("Paiement réussi ! Votre demande a été envoyée à l'administrateur.");
-            window.location.reload();
+            alert("Paiement simulé réussi ! En attente de validation par l'admin.");
+            window.location.href = "../index.html";
         }
     </script>
 </body>
