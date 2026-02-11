@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Espace Employeur | Test-Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
+</head>
+<body class="bg-slate-50">
+    <nav class="bg-white shadow-sm p-4 flex justify-between items-center px-10">
+        <h1 class="text-xl font-bold text-blue-600">TEST-FLOW <span class="text-slate-400 text-sm">PRO</span></h1>
+        <div class="flex items-center gap-4">
+            <span class="text-sm text-slate-500">Compte Entreprise</span>
+            <div class="w-10 h-10 bg-slate-200 rounded-full"></div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto mt-10 p-6">
+        <h2 class="text-2xl font-bold mb-6">Créer une nouvelle campagne de test</h2>
+        
+        <div class="bg-white p-8 rounded-2xl shadow-xl border border-slate-200">
+            <div class="grid grid-cols-1 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700">Nom du projet</label>
+                    <input type="text" id="projName" placeholder="Ex: Ma nouvelle Boutique E-commerce" class="w-full mt-1 p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700">URL du site à tester</label>
+                    <input type="url" id="projUrl" placeholder="https://mon-site.com" class="w-full mt-1 p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700">Nombre de testeurs requis</label>
+                        <input type="number" id="nbTesteurs" value="5" class="w-full mt-1 p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" oninput="calculerPrix()">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700">Budget par testeur (Fixé)</label>
+                        <input type="text" value="300 F CFA" disabled class="w-full mt-1 p-3 bg-slate-100 border rounded-xl text-slate-500 font-bold">
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                    <div class="flex justify-between mb-2">
+                        <span>Coût pour les testeurs :</span>
+                        <span id="coutTesteurs">1500 F CFA</span>
+                    </div>
+                    <div class="flex justify-between mb-2 font-semibold">
+                        <span>Frais de plateforme (25%) :</span>
+                        <span id="fraisPlateforme">375 F CFA</span>
+                    </div>
+                    <hr class="my-2">
+                    <div class="flex justify-between text-xl font-bold text-blue-600">
+                        <span>TOTAL À PAYER :</span>
+                        <span id="totalPayer">1875 F CFA</span>
+                    </div>
+                </div>
+
+                <button onclick="simulerPaiement()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition shadow-lg shadow-blue-200">
+                    <i class="fas fa-credit-card mr-2"></i> PAYER ET ENVOYER POUR VALIDATION
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculerPrix() {
+            let n = document.getElementById('nbTesteurs').value;
+            let testeursTotal = n * 300;
+            let frais = testeursTotal * 0.25;
+            let total = testeursTotal + frais;
+
+            document.getElementById('coutTesteurs').innerText = testeursTotal + " F CFA";
+            document.getElementById('fraisPlateforme').innerText = frais + " F CFA";
+            document.getElementById('totalPayer').innerText = total + " F CFA";
+        }
+
+        function simulerPaiement() {
+            const mission = {
+                id: Date.now(),
+                nom: document.getElementById('projName').value,
+                url: document.getElementById('projUrl').value,
+                testeurs: document.getElementById('nbTesteurs').value,
+                fraisAdmin: (document.getElementById('nbTesteurs').value * 300) * 0.25,
+                statut: 'en_attente'
+            };
+
+            // Sauvegarde locale pour simulation
+            let missions = JSON.parse(localStorage.getItem('missions_pending') || "[]");
+            missions.push(mission);
+            localStorage.setItem('missions_pending', JSON.stringify(missions));
+
+            alert("Paiement réussi ! Votre demande a été envoyée à l'administrateur.");
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
