@@ -1,112 +1,75 @@
-<!-- /admin/gestion.html -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administration | Dashboard Propriétaire</title>
+    <title>Admin | Afritask</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen">
+<body class="bg-slate-900 text-white min-h-screen p-10">
+    <div class="max-w-5xl mx-auto">
+        <header class="flex justify-between items-end mb-12">
+            <div>
+                <h1 class="text-4xl font-black mb-2">Panel de Gestion</h1>
+                <p class="text-slate-400 font-mono text-sm">PROPRIÉTAIRE : AFRITASK</p>
+            </div>
+            <div class="bg-emerald-500/10 border border-emerald-500/50 p-6 rounded-3xl text-right">
+                <p class="text-xs uppercase font-bold text-emerald-400 mb-1">Ma Commission (25%)</p>
+                <p class="text-4xl font-black text-white" id="monSolde">0 F CFA</p>
+            </div>
+        </header>
 
-    <div class="flex">
-        <!-- Barre latérale Admin -->
-        <aside class="w-64 bg-slate-800 h-screen p-6 border-r border-slate-700">
-            <h2 class="text-xl font-bold text-blue-400 mb-10 italic underline">ADMIN PANEL</h2>
-            <nav class="space-y-4">
-                <a href="#" class="block p-3 bg-slate-700 rounded-lg"><i class="fas fa-chart-line mr-2"></i> Vue d'ensemble</a>
-                <a href="#" class="block p-3 hover:bg-slate-700 rounded-lg"><i class="fas fa-check-circle mr-2"></i> Validations</a>
-                <a href="#" class="block p-3 hover:bg-slate-700 rounded-lg"><i class="fas fa-users mr-2"></i> Utilisateurs</a>
-            </nav>
-        </aside>
-
-        <!-- Contenu Principal -->
-        <main class="flex-1 p-10">
-            <header class="flex justify-between items-center mb-12">
-                <div>
-                    <h1 class="text-3xl font-bold">Gestion des Revenus</h1>
-                    <p class="text-slate-400">Gérez les demandes et percevez vos commissions (25%)</p>
-                </div>
-                <!-- TON SOLDE ADMIN -->
-                <div class="bg-blue-900/30 border border-blue-500 p-4 rounded-2xl text-center min-w-[200px]">
-                    <p class="text-xs uppercase tracking-widest text-blue-400">Ma Commission Totale</p>
-                    <p class="text-3xl font-black text-white" id="adminBalance">0 F CFA</p>
-                </div>
-            </header>
-
-            <!-- Liste des demandes en attente -->
-            <section>
-                <h3 class="text-xl font-semibold mb-6 flex items-center">
-                    <span class="w-3 h-3 bg-orange-500 rounded-full animate-pulse mr-3"></span>
-                    Demandes en attente de publication
-                </h3>
-                
-                <div id="pendingList" class="grid gap-4">
-                    <!-- Les cartes s'afficheront ici via JS -->
-                </div>
-            </section>
-        </main>
+        <h2 class="text-xl font-bold mb-6 text-slate-300">Demandes en attente</h2>
+        <div id="liste" class="grid gap-6"></div>
     </div>
 
     <script>
-        // Fonction pour charger les missions envoyées par l'employeur
-        function loadPendingMissions() {
-            const container = document.getElementById('pendingList');
+        function load() {
             const missions = JSON.parse(localStorage.getItem('missions_pending') || "[]");
-            const adminBalance = localStorage.getItem('admin_balance') || 0;
-            
-            document.getElementById('adminBalance').innerText = adminBalance + " F CFA";
+            document.getElementById('monSolde').innerText = (localStorage.getItem('admin_balance') || 0) + " F CFA";
+            const container = document.getElementById('liste');
 
             if(missions.length === 0) {
-                container.innerHTML = `<div class="text-slate-500 italic p-10 bg-slate-800/50 rounded-xl text-center border border-dashed border-slate-700">Aucune demande en attente pour le moment...</div>`;
+                container.innerHTML = `<p class="italic text-slate-500">Aucune nouvelle demande...</p>`;
                 return;
             }
 
-            container.innerHTML = missions.map((m, index) => `
-                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 flex justify-between items-center">
+            container.innerHTML = missions.map((m, i) => `
+                <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 flex justify-between items-center">
                     <div>
-                        <h4 class="text-lg font-bold text-white">${m.nom}</h4>
-                        <p class="text-sm text-slate-400">URL: <span class="text-blue-400">${m.url}</span></p>
-                        <p class="text-sm text-slate-400">Testeurs demandés: <span class="text-white">${m.testeurs}</span></p>
+                        <h3 class="text-2xl font-bold">${m.nom}</h3>
+                        <p class="text-indigo-400 italic">${m.url}</p>
+                        <p class="mt-2 text-slate-400">${m.testeurs} testeurs demandés</p>
                     </div>
                     <div class="text-right">
-                        <p class="text-xs text-slate-400 uppercase italic">Votre gain (25%)</p>
-                        <p class="text-xl font-bold text-green-400 mb-2">+ ${m.fraisAdmin} F CFA</p>
-                        <button onclick="validerMission(${index})" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-bold transition">
-                            ACCEPTER & PUBLIER
-                        </button>
+                        <p class="text-emerald-400 font-black text-xl mb-4">+ ${m.fraisAdmin} F</p>
+                        <button onclick="valider(${i})" class="bg-emerald-500 hover:bg-emerald-600 text-slate-900 px-8 py-3 rounded-xl font-black transition">ACCEPTER & ENCAISSER</button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function validerMission(index) {
+        function valider(i) {
             let missions = JSON.parse(localStorage.getItem('missions_pending') || "[]");
-            let missionValidee = missions[index];
+            let m = missions[i];
+            
+            // Créditer l'admin
+            let solde = parseInt(localStorage.getItem('admin_balance') || 0);
+            localStorage.setItem('admin_balance', solde + m.fraisAdmin);
 
-            // 1. Ajouter les 25% au solde Admin
-            let currentBalance = parseInt(localStorage.getItem('admin_balance') || 0);
-            localStorage.setItem('admin_balance', currentBalance + missionValidee.fraisAdmin);
+            // Publier pour les travailleurs
+            let pubs = JSON.parse(localStorage.getItem('missions_publiques') || "[]");
+            pubs.push(m);
+            localStorage.setItem('missions_publiques', JSON.stringify(pubs));
 
-            // 2. Transférer la mission vers "Missions Publiques" (pour les travailleurs)
-            let missionsPubliques = JSON.parse(localStorage.getItem('missions_publiques') || "[]");
-            missionValidee.statut = 'publiee';
-            missionsPubliques.push(missionValidee);
-            localStorage.setItem('missions_publiques', JSON.stringify(missionsPubliques));
-
-            // 3. Retirer de la liste d'attente
-            missions.splice(index, 1);
+            // Retirer de la liste
+            missions.splice(i, 1);
             localStorage.setItem('missions_pending', JSON.stringify(missions));
-
-            alert("Mission publiée ! Votre commission a été créditée.");
-            loadPendingMissions();
+            
+            load();
+            alert("Commission de " + m.fraisAdmin + " F encaissée ! Mission publiée.");
         }
-
-        // Charger au démarrage
-        loadPendingMissions();
-        // Rafraîchir si on change d'onglet
-        window.addEventListener('storage', loadPendingMissions);
+        load();
     </script>
 </body>
 </html>
