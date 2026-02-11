@@ -1,112 +1,131 @@
-<!-- /admin/gestion.html -->
+<!-- /travailleur/dashboard.html -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administration | Dashboard Propriétaire</title>
+    <title>Mon Espace Travail | Test-Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen">
+<body class="bg-slate-50 min-h-screen">
 
     <div class="flex">
-        <!-- Barre latérale Admin -->
-        <aside class="w-64 bg-slate-800 h-screen p-6 border-r border-slate-700">
-            <h2 class="text-xl font-bold text-blue-400 mb-10 italic underline">ADMIN PANEL</h2>
+        <!-- SIDEBAR -->
+        <aside class="w-64 bg-indigo-900 text-white min-h-screen p-6 fixed">
+            <div class="mb-10 font-bold text-2xl tracking-tighter italic">TEST-FLOW</div>
             <nav class="space-y-4">
-                <a href="#" class="block p-3 bg-slate-700 rounded-lg"><i class="fas fa-chart-line mr-2"></i> Vue d'ensemble</a>
-                <a href="#" class="block p-3 hover:bg-slate-700 rounded-lg"><i class="fas fa-check-circle mr-2"></i> Validations</a>
-                <a href="#" class="block p-3 hover:bg-slate-700 rounded-lg"><i class="fas fa-users mr-2"></i> Utilisateurs</a>
+                <a href="#" class="block p-3 bg-indigo-800 rounded-xl"><i class="fas fa-grid-2 mr-2"></i> Dashboard</a>
+                <a href="#" class="block p-3 hover:bg-indigo-800 rounded-xl transition"><i class="fas fa-tasks mr-2"></i> Missions</a>
+                <a href="#" class="block p-3 hover:bg-indigo-800 rounded-xl transition"><i class="fas fa-history mr-2"></i> Historique</a>
             </nav>
         </aside>
 
-        <!-- Contenu Principal -->
-        <main class="flex-1 p-10">
-            <header class="flex justify-between items-center mb-12">
-                <div>
-                    <h1 class="text-3xl font-bold">Gestion des Revenus</h1>
-                    <p class="text-slate-400">Gérez les demandes et percevez vos commissions (25%)</p>
-                </div>
-                <!-- TON SOLDE ADMIN -->
-                <div class="bg-blue-900/30 border border-blue-500 p-4 rounded-2xl text-center min-w-[200px]">
-                    <p class="text-xs uppercase tracking-widest text-blue-400">Ma Commission Totale</p>
-                    <p class="text-3xl font-black text-white" id="adminBalance">0 F CFA</p>
+        <!-- MAIN -->
+        <main class="ml-64 flex-1 p-10">
+            <header class="flex justify-between items-center mb-10">
+                <h1 class="text-2xl font-bold text-slate-800">Tableau de Bord</h1>
+                
+                <!-- SOLDE TRAVAILLEUR -->
+                <div class="bg-white px-6 py-3 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
+                    <div>
+                        <p class="text-xs text-slate-500 uppercase font-semibold">Mon Portefeuille</p>
+                        <p class="text-2xl font-black text-indigo-600" id="userBalance">0 F CFA</p>
+                    </div>
+                    <div class="bg-green-100 text-green-600 p-3 rounded-full">
+                        <i class="fas fa-wallet text-xl"></i>
+                    </div>
                 </div>
             </header>
 
-            <!-- Liste des demandes en attente -->
+            <!-- ZONE DES MISSIONS DYNAMIQUES -->
             <section>
-                <h3 class="text-xl font-semibold mb-6 flex items-center">
-                    <span class="w-3 h-3 bg-orange-500 rounded-full animate-pulse mr-3"></span>
-                    Demandes en attente de publication
-                </h3>
+                <h2 class="text-lg font-bold text-slate-700 mb-6 uppercase tracking-wide">Missions Disponibles (300 F / unité)</h2>
                 
-                <div id="pendingList" class="grid gap-4">
-                    <!-- Les cartes s'afficheront ici via JS -->
+                <div id="missionsContainer" class="grid gap-4">
+                    <!-- Les missions validées par l'admin apparaîtront ici -->
                 </div>
             </section>
         </main>
     </div>
 
     <script>
-        // Fonction pour charger les missions envoyées par l'employeur
-        function loadPendingMissions() {
-            const container = document.getElementById('pendingList');
-            const missions = JSON.parse(localStorage.getItem('missions_pending') || "[]");
-            const adminBalance = localStorage.getItem('admin_balance') || 0;
+        function loadMissions() {
+            const container = document.getElementById('missionsContainer');
+            const userBalance = localStorage.getItem('worker_balance') || 0;
             
-            document.getElementById('adminBalance').innerText = adminBalance + " F CFA";
+            // Mise à jour du solde affiché
+            document.getElementById('userBalance').innerText = userBalance + " F CFA";
 
-            if(missions.length === 0) {
-                container.innerHTML = `<div class="text-slate-500 italic p-10 bg-slate-800/50 rounded-xl text-center border border-dashed border-slate-700">Aucune demande en attente pour le moment...</div>`;
+            // Récupérer les missions publiées par l'Admin
+            const missions = JSON.parse(localStorage.getItem('missions_publiques') || "[]");
+
+            if (missions.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white p-12 rounded-3xl text-center border-2 border-dashed border-slate-200">
+                        <i class="fas fa-search text-4xl text-slate-300 mb-4"></i>
+                        <p class="text-slate-500 font-medium">Aucune mission disponible pour le moment.<br>Revenez plus tard !</p>
+                    </div>`;
                 return;
             }
 
             container.innerHTML = missions.map((m, index) => `
-                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 flex justify-between items-center">
-                    <div>
-                        <h4 class="text-lg font-bold text-white">${m.nom}</h4>
-                        <p class="text-sm text-slate-400">URL: <span class="text-blue-400">${m.url}</span></p>
-                        <p class="text-sm text-slate-400">Testeurs demandés: <span class="text-white">${m.testeurs}</span></p>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center hover:border-indigo-300 transition-all group">
+                    <div class="flex items-center gap-5">
+                        <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition">
+                            <i class="fas fa-globe text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-lg">${m.nom}</h3>
+                            <p class="text-indigo-500 text-sm font-medium underline">${m.url}</p>
+                        </div>
                     </div>
-                    <div class="text-right">
-                        <p class="text-xs text-slate-400 uppercase italic">Votre gain (25%)</p>
-                        <p class="text-xl font-bold text-green-400 mb-2">+ ${m.fraisAdmin} F CFA</p>
-                        <button onclick="validerMission(${index})" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-bold transition">
-                            ACCEPTER & PUBLIER
+                    
+                    <div class="flex items-center gap-8">
+                        <div class="text-right italic">
+                            <span class="text-slate-400 text-xs uppercase">Gain garanti</span>
+                            <p class="text-xl font-black text-slate-800">300 F</p>
+                        </div>
+                        <button onclick="completerMission(${index})" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-indigo-100 transition transform hover:scale-105">
+                            Faire le test
                         </button>
                     </div>
                 </div>
             `).join('');
         }
 
-        function validerMission(index) {
-            let missions = JSON.parse(localStorage.getItem('missions_pending') || "[]");
-            let missionValidee = missions[index];
+        function completerMission(index) {
+            let missions = JSON.parse(localStorage.getItem('missions_publiques') || "[]");
+            let mission = missions[index];
 
-            // 1. Ajouter les 25% au solde Admin
-            let currentBalance = parseInt(localStorage.getItem('admin_balance') || 0);
-            localStorage.setItem('admin_balance', currentBalance + missionValidee.fraisAdmin);
+            // Simulation d'un processus de test
+            let confirmation = confirm(`Voulez-vous commencer le test pour "${mission.nom}" ?\nUne fois terminé, 300 F seront ajoutés à votre compte.`);
 
-            // 2. Transférer la mission vers "Missions Publiques" (pour les travailleurs)
-            let missionsPubliques = JSON.parse(localStorage.getItem('missions_publiques') || "[]");
-            missionValidee.statut = 'publiee';
-            missionsPubliques.push(missionValidee);
-            localStorage.setItem('missions_publiques', JSON.stringify(missionsPubliques));
+            if (confirmation) {
+                // 1. Ajouter 300f au solde du travailleur
+                let currentBalance = parseInt(localStorage.getItem('worker_balance') || 0);
+                localStorage.setItem('worker_balance', currentBalance + 300);
 
-            // 3. Retirer de la liste d'attente
-            missions.splice(index, 1);
-            localStorage.setItem('missions_pending', JSON.stringify(missions));
+                // 2. Logique de décompte (Un testeur a fini, on réduit le nombre de places)
+                mission.testeurs = parseInt(mission.testeurs) - 1;
 
-            alert("Mission publiée ! Votre commission a été créditée.");
-            loadPendingMissions();
+                if (mission.testeurs <= 0) {
+                    missions.splice(index, 1); // Plus de place, on retire la mission
+                } else {
+                    missions[index] = mission;
+                }
+
+                localStorage.setItem('missions_publiques', JSON.stringify(missions));
+                
+                alert("Félicitations ! Travail validé. +300 F CFA ajoutés.");
+                loadMissions();
+            }
         }
 
-        // Charger au démarrage
-        loadPendingMissions();
-        // Rafraîchir si on change d'onglet
-        window.addEventListener('storage', loadPendingMissions);
+        // Charger les missions au démarrage
+        loadMissions();
+        // Écouter les changements (si l'admin valide une mission dans un autre onglet)
+        window.addEventListener('storage', loadMissions);
     </script>
 </body>
 </html>
