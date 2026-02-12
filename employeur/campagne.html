@@ -3,71 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion Employeur | Afritask</title>
-    <!-- On garde le même fichier style.css pour la cohérence -->
+    <title>Tableau de Bord Employeur | Afritask</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
 </head>
-<body class="bg-slate-50 flex items-center justify-center min-h-screen">
+<body class="bg-slate-50 min-h-screen font-sans">
 
-    <div class="max-w-md w-full p-8 bg-white rounded-[2rem] shadow-2xl border border-slate-100">
-        <div class="text-center mb-10">
-            <div class="bg-indigo-600 w-16 h-16 rounded-2xl flex items-center justify-center text-white text-2xl mx-auto mb-4 shadow-lg shadow-indigo-200">
-                <i class="fas fa-briefcase"></i>
-            </div>
-            <h1 class="text-3xl font-black text-slate-800 tracking-tight">Espace Employeur</h1>
-            <p class="text-slate-500 mt-2 font-medium">Créez votre compte pour tester vos produits.</p>
+    <!-- HEADER PRO -->
+    <nav class="bg-white border-b border-slate-200 fixed w-full z-50 px-8 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <div class="bg-indigo-600 p-2 rounded-lg text-white"><i class="fas fa-briefcase"></i></div>
+            <span class="text-xl font-bold text-slate-800">AFRITASK <span class="text-indigo-600">BUSINESS</span></span>
         </div>
 
-        <form id="authForm" class="space-y-6">
-            <div class="space-y-2">
-                <label class="text-sm font-bold text-slate-700 ml-1">Prénom</label>
-                <input type="text" id="prenom" required placeholder="Jean" 
-                    class="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-indigo-500 rounded-2xl outline-none transition-all">
+        <div class="flex items-center gap-6">
+            <!-- Boîte de Notifications -->
+            <div class="relative cursor-pointer" id="notifBtn">
+                <i class="fas fa-bell text-slate-400 text-xl"></i>
+                <span id="notifBadge" class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden italic">0</span>
+                
+                <!-- Menu Déroulant Notifications -->
+                <div id="notifDropdown" class="absolute right-0 mt-4 w-80 bg-white shadow-2xl rounded-2xl border border-slate-100 hidden overflow-hidden">
+                    <div class="p-4 border-b border-slate-100 font-bold text-slate-700">Notifications récentes</div>
+                    <div id="notifList" class="max-h-64 overflow-y-auto">
+                        <p class="p-8 text-center text-slate-400 text-sm italic">Aucun rapport de test pour le moment.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3 border-l pl-6 border-slate-200">
+                <span id="userName" class="font-bold text-slate-700 italic">Chargement...</span>
+                <img src="https://ui-avatars.com" class="w-10 h-10 rounded-full">
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto pt-28 px-6 pb-20">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- COLONNE GAUCHE : PUBLICATION -->
+            <div class="lg:col-span-2 space-y-8">
+                <section class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100">
+                    <h2 class="text-2xl font-black text-slate-800 mb-6">🚀 Publier une nouvelle mission</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-slate-600 uppercase tracking-wider ml-1">Nom du Site / App</label>
+                            <input type="text" id="siteNom" placeholder="Ma Boutique E-commerce" class="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-indigo-500 rounded-2xl outline-none transition-all italic">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-slate-600 uppercase tracking-wider ml-1">URL de destination</label>
+                            <input type="url" id="siteUrl" placeholder="https://..." class="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-indigo-500 rounded-2xl outline-none transition-all italic">
+                        </div>
+                    </div>
+
+                    <!-- CALCULATEUR DE BUDGET -->
+                    <div class="bg-indigo-50 p-8 rounded-3xl border-2 border-indigo-100 mb-8">
+                        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                            <div class="flex-1 w-full">
+                                <label class="text-sm font-bold text-indigo-900 uppercase tracking-wider ml-1">Budget Total (F CFA)</label>
+                                <input type="number" id="budgetInput" value="5000" oninput="calculerTesteurs()" class="w-full mt-2 p-4 bg-white border-2 border-indigo-200 rounded-2xl outline-none text-2xl font-black text-indigo-600">
+                            </div>
+                            <div class="text-center md:text-right">
+                                <p class="text-slate-500 text-sm font-bold uppercase italic">Nombre de testeurs</p>
+                                <p id="nbTesteursResult" class="text-5xl font-black text-slate-800">12</p>
+                                <p class="text-xs text-slate-400 mt-1 italic">(Frais plateforme 25% inclus)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="lancerMission()" class="w-full bg-slate-800 text-white py-5 rounded-2xl font-black text-xl hover:bg-slate-900 transition shadow-xl shadow-slate-200 flex items-center justify-center gap-4">
+                        ENVOYER POUR VALIDATION <i class="fas fa-paper-plane"></i>
+                    </button>
+                </section>
             </div>
 
-            <div class="space-y-2">
-                <label class="text-sm font-bold text-slate-700 ml-1">Nom</label>
-                <input type="text" id="nom" required placeholder="Dupont" 
-                    class="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-indigo-500 rounded-2xl outline-none transition-all">
+            <!-- COLONNE DROITE : ÉTAT DES MISSIONS -->
+            <div class="space-y-6">
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                    <h3 class="font-bold text-slate-700 border-b pb-4 mb-4">Mes campagnes actives</h3>
+                    <div id="mesMissionsList" class="space-y-4">
+                        <p class="text-sm text-slate-400 italic">Aucune mission en cours.</p>
+                    </div>
+                </div>
             </div>
+        </div>
+    </main>
 
-            <button type="submit" class="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 flex items-center justify-center gap-3">
-                CRÉER MON COMPTE <i class="fas fa-arrow-right"></i>
-            </button>
-        </form>
-
-        <div class="mt-8 text-center">
-            <p class="text-xs text-slate-400 uppercase font-bold tracking-widest">Afritask Business Solutions</p>
+    <!-- FENÊTRE MODALE : DÉTAILS DU TEST (Formulaire reçu) -->
+    <div id="modalRapport" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-[100] hidden p-4">
+        <div class="bg-white max-w-lg w-full rounded-[2rem] p-10 shadow-2xl relative">
+            <button onclick="fermerRapport()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
+            <div id="rapportContent">
+                <!-- Injecté par JS -->
+            </div>
         </div>
     </div>
 
-    <script>
-        // Vérifier si l'utilisateur est déjà connecté
-        document.addEventListener('DOMContentLoaded', () => {
-            const user = localStorage.getItem('employeur_user');
-            if (user) {
-                window.location.href = 'dashboard.html';
-            }
-        });
-
-        // Gérer l'inscription
-        document.getElementById('authForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const userData = {
-                prenom: document.getElementById('prenom').value,
-                nom: document.getElementById('nom').value,
-                dateInscription: new Date().toLocaleDateString()
-            };
-
-            // Mémorisation des données
-            localStorage.setItem('employeur_user', JSON.stringify(userData));
-            
-            alert(`Bienvenue ${userData.prenom} ! Votre compte a été créé.`);
-            window.location.href = 'dashboard.html';
-        });
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
