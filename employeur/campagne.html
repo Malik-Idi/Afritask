@@ -2,73 +2,72 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Créer une campagne | Afritask</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion Employeur | Afritask</title>
+    <!-- On garde le même fichier style.css pour la cohérence -->
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
 </head>
-<body class="bg-slate-50 min-h-screen">
-    <div class="max-w-3xl mx-auto py-12 px-6">
-        <a href="../index.html" class="text-indigo-600 font-bold mb-8 inline-block"><i class="fas fa-arrow-left mr-2"></i> Retour</a>
-        
-        <div class="bg-white rounded-3xl shadow-xl p-10 border border-slate-100">
-            <h1 class="text-3xl font-black text-slate-800 mb-2">Nouvelle Campagne</h1>
-            <p class="text-slate-500 mb-8">Remplissez les détails pour lancer vos tests UX.</p>
+<body class="bg-slate-50 flex items-center justify-center min-h-screen">
 
-            <div class="space-y-6">
-                <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-2">Nom du Projet</label>
-                    <input type="text" id="nom" placeholder="Ex: Refonte Dashboard" class="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-indigo-500 rounded-2xl outline-none transition">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-2">URL du site</label>
-                    <input type="url" id="url" placeholder="https://votre-site.com" class="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-indigo-500 rounded-2xl outline-none transition">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-slate-700 mb-2">Nombre de testeurs (300 F / testeur)</label>
-                    <input type="number" id="testeurs" value="1" min="1" oninput="calculer()" class="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-indigo-500 rounded-2xl outline-none transition">
-                </div>
-
-                <div class="bg-indigo-900 text-white p-6 rounded-2xl">
-                    <div class="flex justify-between mb-2 opacity-80"><span>Coût Testeurs :</span> <span id="coutT">300 F</span></div>
-                    <div class="flex justify-between mb-4 opacity-80"><span>Frais Service (25%) :</span> <span id="fraisP">75 F</span></div>
-                    <div class="flex justify-between text-2xl font-black border-t border-indigo-700 pt-4">
-                        <span>TOTAL À PAYER</span>
-                        <span id="total">375 F CFA</span>
-                    </div>
-                </div>
-
-                <button onclick="payer()" class="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black text-xl hover:bg-indigo-700 transition shadow-lg shadow-indigo-200">
-                    <i class="fas fa-lock mr-2"></i> PAYER ET PUBLIER
-                </button>
+    <div class="max-w-md w-full p-8 bg-white rounded-[2rem] shadow-2xl border border-slate-100">
+        <div class="text-center mb-10">
+            <div class="bg-indigo-600 w-16 h-16 rounded-2xl flex items-center justify-center text-white text-2xl mx-auto mb-4 shadow-lg shadow-indigo-200">
+                <i class="fas fa-briefcase"></i>
             </div>
+            <h1 class="text-3xl font-black text-slate-800 tracking-tight">Espace Employeur</h1>
+            <p class="text-slate-500 mt-2 font-medium">Créez votre compte pour tester vos produits.</p>
+        </div>
+
+        <form id="authForm" class="space-y-6">
+            <div class="space-y-2">
+                <label class="text-sm font-bold text-slate-700 ml-1">Prénom</label>
+                <input type="text" id="prenom" required placeholder="Jean" 
+                    class="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-indigo-500 rounded-2xl outline-none transition-all">
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-sm font-bold text-slate-700 ml-1">Nom</label>
+                <input type="text" id="nom" required placeholder="Dupont" 
+                    class="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-indigo-500 rounded-2xl outline-none transition-all">
+            </div>
+
+            <button type="submit" class="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 flex items-center justify-center gap-3">
+                CRÉER MON COMPTE <i class="fas fa-arrow-right"></i>
+            </button>
+        </form>
+
+        <div class="mt-8 text-center">
+            <p class="text-xs text-slate-400 uppercase font-bold tracking-widest">Afritask Business Solutions</p>
         </div>
     </div>
 
     <script>
-        function calculer() {
-            let n = document.getElementById('testeurs').value;
-            let coutT = n * 300;
-            let frais = coutT * 0.25;
-            document.getElementById('coutT').innerText = coutT + " F";
-            document.getElementById('fraisP').innerText = frais + " F";
-            document.getElementById('total').innerText = (coutT + frais) + " F CFA";
-        }
+        // Vérifier si l'utilisateur est déjà connecté
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = localStorage.getItem('employeur_user');
+            if (user) {
+                window.location.href = 'dashboard.html';
+            }
+        });
 
-        function payer() {
-            const mission = {
-                id: Date.now(),
+        // Gérer l'inscription
+        document.getElementById('authForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const userData = {
+                prenom: document.getElementById('prenom').value,
                 nom: document.getElementById('nom').value,
-                url: document.getElementById('url').value,
-                testeurs: document.getElementById('testeurs').value,
-                fraisAdmin: (document.getElementById('testeurs').value * 300) * 0.25,
-                statut: 'en_attente'
+                dateInscription: new Date().toLocaleDateString()
             };
-            let missions = JSON.parse(localStorage.getItem('missions_pending') || "[]");
-            missions.push(mission);
-            localStorage.setItem('missions_pending', JSON.stringify(missions));
-            alert("Paiement simulé réussi ! En attente de validation par l'admin.");
-            window.location.href = "../index.html";
-        }
+
+            // Mémorisation des données
+            localStorage.setItem('employeur_user', JSON.stringify(userData));
+            
+            alert(`Bienvenue ${userData.prenom} ! Votre compte a été créé.`);
+            window.location.href = 'dashboard.html';
+        });
     </script>
 </body>
 </html>
