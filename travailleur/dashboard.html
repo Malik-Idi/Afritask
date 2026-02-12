@@ -1,131 +1,84 @@
-<!-- /travailleur/dashboard.html -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Espace Travail | Test-Flow</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Flux de Missions | Afritask</title>
+    <!-- Lien vers le CSS scindé -->
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome pour les icônes style réseaux sociaux -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
 </head>
-<body class="bg-slate-50 min-h-screen">
+<body>
 
-    <div class="flex">
-        <!-- SIDEBAR -->
-        <aside class="w-64 bg-indigo-900 text-white min-h-screen p-6 fixed">
-            <div class="mb-10 font-bold text-2xl tracking-tighter italic">TEST-FLOW</div>
-            <nav class="space-y-4">
-                <a href="#" class="block p-3 bg-indigo-800 rounded-xl"><i class="fas fa-grid-2 mr-2"></i> Dashboard</a>
-                <a href="#" class="block p-3 hover:bg-indigo-800 rounded-xl transition"><i class="fas fa-tasks mr-2"></i> Missions</a>
-                <a href="#" class="block p-3 hover:bg-indigo-800 rounded-xl transition"><i class="fas fa-history mr-2"></i> Historique</a>
-            </nav>
+    <!-- Barre de Navigation Supérieure -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="logo italic">AFRITASK</div>
+            <div class="user-wallet">
+                <span class="wallet-label">Solde :</span>
+                <span id="userBalance" class="wallet-amount">0 F CFA</span>
+            </div>
+            <div class="user-profile">
+                <img src="https://ui-avatars.com" alt="Avatar">
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Colonne Gauche : Raccourcis (Optionnel) -->
+        <aside class="sidebar-left">
+            <div class="menu-item active"><i class="fas fa-newspaper"></i> Fil d'actualité</div>
+            <div class="menu-item"><i class="fas fa-wallet"></i> Retraits</div>
+            <div class="menu-item"><i class="fas fa-user"></i> Mon Profil</div>
         </aside>
 
-        <!-- MAIN -->
-        <main class="ml-64 flex-1 p-10">
-            <header class="flex justify-between items-center mb-10">
-                <h1 class="text-2xl font-bold text-slate-800">Tableau de Bord</h1>
-                
-                <!-- SOLDE TRAVAILLEUR -->
-                <div class="bg-white px-6 py-3 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
-                    <div>
-                        <p class="text-xs text-slate-500 uppercase font-semibold">Mon Portefeuille</p>
-                        <p class="text-2xl font-black text-indigo-600" id="userBalance">0 F CFA</p>
-                    </div>
-                    <div class="bg-green-100 text-green-600 p-3 rounded-full">
-                        <i class="fas fa-wallet text-xl"></i>
-                    </div>
-                </div>
-            </header>
-
-            <!-- ZONE DES MISSIONS DYNAMIQUES -->
-            <section>
-                <h2 class="text-lg font-bold text-slate-700 mb-6 uppercase tracking-wide">Missions Disponibles (300 F / unité)</h2>
-                
-                <div id="missionsContainer" class="grid gap-4">
-                    <!-- Les missions validées par l'admin apparaîtront ici -->
-                </div>
-            </section>
+        <!-- Colonne Centrale : Flux de Missions -->
+        <main class="feed">
+            <div id="missionsFeed">
+                <!-- Les publications (Cards Facebook style) seront injectées ici par le JS -->
+            </div>
+            
+            <!-- Message de chargement si vide -->
+            <div id="emptyFeed" class="hidden">
+                <p>Aucune nouvelle mission pour le moment...</p>
+            </div>
         </main>
+
+        <!-- Colonne Droite : Statistiques et Activités -->
+        <aside class="sidebar-right">
+            <div class="card-mini">
+                <h3>Missions en cours</h3>
+                <div id="activeTaskTimer" class="timer-display">Aucune tâche active</div>
+            </div>
+        </aside>
     </div>
 
-    <script>
-        function loadMissions() {
-            const container = document.getElementById('missionsContainer');
-            const userBalance = localStorage.getItem('worker_balance') || 0;
-            
-            // Mise à jour du solde affiché
-            document.getElementById('userBalance').innerText = userBalance + " F CFA";
-
-            // Récupérer les missions publiées par l'Admin
-            const missions = JSON.parse(localStorage.getItem('missions_publiques') || "[]");
-
-            if (missions.length === 0) {
-                container.innerHTML = `
-                    <div class="bg-white p-12 rounded-3xl text-center border-2 border-dashed border-slate-200">
-                        <i class="fas fa-search text-4xl text-slate-300 mb-4"></i>
-                        <p class="text-slate-500 font-medium">Aucune mission disponible pour le moment.<br>Revenez plus tard !</p>
-                    </div>`;
-                return;
-            }
-
-            container.innerHTML = missions.map((m, index) => `
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center hover:border-indigo-300 transition-all group">
-                    <div class="flex items-center gap-5">
-                        <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition">
-                            <i class="fas fa-globe text-2xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-slate-800 text-lg">${m.nom}</h3>
-                            <p class="text-indigo-500 text-sm font-medium underline">${m.url}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center gap-8">
-                        <div class="text-right italic">
-                            <span class="text-slate-400 text-xs uppercase">Gain garanti</span>
-                            <p class="text-xl font-black text-slate-800">300 F</p>
-                        </div>
-                        <button onclick="completerMission(${index})" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-indigo-100 transition transform hover:scale-105">
-                            Faire le test
-                        </button>
+    <!-- MODAL : QUESTIONNAIRE DE VALIDATION (Caché par défaut) -->
+    <div id="modalQuestionnaire" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Validation de la tâche</h2>
+                <button id="closeModal">&times;</button>
+            </div>
+            <form id="taskForm">
+                <div class="form-group">
+                    <label>Qu'avez-vous pensé de l'ergonomie du site ?</label>
+                    <textarea required placeholder="Votre avis réel..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Le bouton de paiement est-il facile à trouver ?</label>
+                    <div class="radio-group">
+                        <input type="radio" name="pay" value="oui"> Oui
+                        <input type="radio" name="pay" value="non"> Non
                     </div>
                 </div>
-            `).join('');
-        }
+                <button type="submit" class="btn-submit">Valider et recevoir mes 300 F</button>
+            </form>
+        </div>
+    </div>
 
-        function completerMission(index) {
-            let missions = JSON.parse(localStorage.getItem('missions_publiques') || "[]");
-            let mission = missions[index];
-
-            // Simulation d'un processus de test
-            let confirmation = confirm(`Voulez-vous commencer le test pour "${mission.nom}" ?\nUne fois terminé, 300 F seront ajoutés à votre compte.`);
-
-            if (confirmation) {
-                // 1. Ajouter 300f au solde du travailleur
-                let currentBalance = parseInt(localStorage.getItem('worker_balance') || 0);
-                localStorage.setItem('worker_balance', currentBalance + 300);
-
-                // 2. Logique de décompte (Un testeur a fini, on réduit le nombre de places)
-                mission.testeurs = parseInt(mission.testeurs) - 1;
-
-                if (mission.testeurs <= 0) {
-                    missions.splice(index, 1); // Plus de place, on retire la mission
-                } else {
-                    missions[index] = mission;
-                }
-
-                localStorage.setItem('missions_publiques', JSON.stringify(missions));
-                
-                alert("Félicitations ! Travail validé. +300 F CFA ajoutés.");
-                loadMissions();
-            }
-        }
-
-        // Charger les missions au démarrage
-        loadMissions();
-        // Écouter les changements (si l'admin valide une mission dans un autre onglet)
-        window.addEventListener('storage', loadMissions);
-    </script>
+    <!-- Lien vers le JS scindé -->
+    <script src="app.js"></script>
 </body>
 </html>
