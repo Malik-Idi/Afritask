@@ -1,0 +1,97 @@
+/* --- Couleurs Admin (Dark Mode) --- */
+:root {
+    --bg-dark: #0f172a;
+    --card-dark: #1e293b;
+    --accent: #6366f1;
+    --text-muted: #94a3b8;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+}
+
+/* --- Animations --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* --- Boutons Onglets --- */
+.onglet-btn {
+    color: var(--text-muted);
+    font-weight: 600;
+    border: 1px solid transparent;
+}
+
+.onglet-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+}
+
+.onglet-btn.active {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+}
+
+/* --- Cartes de Missions --- */
+.mission-card {
+    background: var(--card-dark);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    transition: all 0.3s ease;
+}
+
+.mission-card:hover {
+    border-color: var(--accent);
+    transform: scale(1.01);
+}
+
+/* --- Badges d'état --- */
+.badge {
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badge-attente { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+.badge-cours { background: rgba(99, 102, 241, 0.1); color: var(--accent); }
+.badge-fini { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+
+/* --- Journal de Bord (Logs) --- */
+.log-entry {
+    padding: 1rem;
+    border-left: 3px solid var(--accent);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 0 12px 12px 0;
+}
+
+/* --- Scrollbar Custom --- */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* --- Masquage des sections --- */
+.hidden {
+    display: none !important;
+}
