@@ -3,104 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de Bord Employeur | Afritask</title>
+    <title>Afritask Business | Tableau de Bord</title>
+    <!-- CSS Scindé -->
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
 </head>
-<body class="bg-slate-50 min-h-screen font-sans">
+<body class="bg-slate-50 min-h-screen">
 
-    <!-- HEADER PRO -->
-    <nav class="bg-white border-b border-slate-200 fixed w-full z-50 px-8 py-4 flex justify-between items-center">
+    <!-- BARRE DE NAVIGATION -->
+    <nav class="bg-white border-b border-slate-200 fixed w-full z-50 px-6 py-4 flex justify-between items-center">
         <div class="flex items-center gap-2">
-            <div class="bg-indigo-600 p-2 rounded-lg text-white"><i class="fas fa-briefcase"></i></div>
-            <span class="text-xl font-bold text-slate-800">AFRITASK <span class="text-indigo-600">BUSINESS</span></span>
+            <div class="bg-indigo-600 p-2 rounded-lg text-white shadow-lg shadow-indigo-100">
+                <i class="fas fa-briefcase"></i>
+            </div>
+            <span class="text-xl font-black text-slate-800 tracking-tighter italic">AFRITASK <span class="text-indigo-600">BIZ</span></span>
         </div>
 
         <div class="flex items-center gap-6">
-            <!-- Boîte de Notifications -->
-            <div class="relative cursor-pointer" id="notifBtn">
-                <i class="fas fa-bell text-slate-400 text-xl"></i>
-                <span id="notifBadge" class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden italic">0</span>
+            <!-- NOTIFICATIONS -->
+            <div class="relative" id="notifContainer">
+                <button id="notifBtn" class="relative p-2 text-slate-400 hover:text-indigo-600 transition">
+                    <i class="fas fa-bell text-xl"></i>
+                    <span id="notifBadge" class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
+                </button>
                 
-                <!-- Menu Déroulant Notifications -->
-                <div id="notifDropdown" class="absolute right-0 mt-4 w-80 bg-white shadow-2xl rounded-2xl border border-slate-100 hidden overflow-hidden">
-                    <div class="p-4 border-b border-slate-100 font-bold text-slate-700">Notifications récentes</div>
-                    <div id="notifList" class="max-h-64 overflow-y-auto">
-                        <p class="p-8 text-center text-slate-400 text-sm italic">Aucun rapport de test pour le moment.</p>
+                <!-- MENU DÉROULANT NOTIFS -->
+                <div id="notifDropdown" class="absolute right-0 mt-4 w-80 bg-white shadow-2xl rounded-2xl border border-slate-100 hidden z-50 overflow-hidden">
+                    <div class="p-4 border-b bg-slate-50 font-bold text-slate-700 flex justify-between items-center">
+                        <span>Notifications</span>
+                        <button onclick="effacerNotifs()" class="text-[10px] text-indigo-600 uppercase italic">Effacer</button>
+                    </div>
+                    <div id="notifList" class="max-h-80 overflow-y-auto">
+                        <p class="p-8 text-center text-slate-400 text-sm italic">Aucun nouveau rapport.</p>
                     </div>
                 </div>
             </div>
             
             <div class="flex items-center gap-3 border-l pl-6 border-slate-200">
-                <span id="userName" class="font-bold text-slate-700 italic">Chargement...</span>
-                <img src="https://ui-avatars.com" class="w-10 h-10 rounded-full">
+                <div class="text-right hidden sm:block">
+                    <p id="userName" class="font-bold text-slate-800 leading-none mb-1 italic text-sm">Chargement...</p>
+                    <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Employeur</p>
+                </div>
+                <img src="https://ui-avatars.com" class="w-10 h-10 rounded-full border-2 border-white shadow-sm">
             </div>
         </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto pt-28 px-6 pb-20">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
-            <!-- COLONNE GAUCHE : PUBLICATION -->
-            <div class="lg:col-span-2 space-y-8">
-                <section class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100">
-                    <h2 class="text-2xl font-black text-slate-800 mb-6">🚀 Publier une nouvelle mission</h2>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                        <div class="space-y-2">
-                            <label class="text-sm font-bold text-slate-600 uppercase tracking-wider ml-1">Nom du Site / App</label>
-                            <input type="text" id="siteNom" placeholder="Ma Boutique E-commerce" class="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-indigo-500 rounded-2xl outline-none transition-all italic">
+    <!-- CONTENU PRINCIPAL -->
+    <main class="max-w-6xl mx-auto pt-28 px-6 pb-20 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- SECTION GAUCHE : CRÉATION -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100">
+                <h2 class="text-2xl font-black text-slate-800 mb-6 flex items-center gap-3">
+                    <span class="text-indigo-600"><i class="fas fa-plus-circle"></i></span> 
+                    Lancer un nouveau test
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+                    <div class="group">
+                        <label class="block text-xs font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">Nom du projet</label>
+                        <input type="text" id="siteNom" placeholder="Ex: Mon Application Mobile" 
+                            class="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-indigo-500 focus:bg-white rounded-2xl outline-none transition-all italic">
+                    </div>
+                    <div class="group">
+                        <label class="block text-xs font-black text-slate-400 uppercase mb-2 ml-1 tracking-widest">URL du site</label>
+                        <input type="url" id="siteUrl" placeholder="https://www.monsite.com" 
+                            class="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-indigo-500 focus:bg-white rounded-2xl outline-none transition-all italic">
+                    </div>
+                </div>
+
+                <!-- CALCULATEUR DE BUDGET -->
+                <div class="bg-gradient-to-br from-indigo-600 to-indigo-800 p-8 rounded-[2rem] text-white shadow-xl shadow-indigo-100 mb-8">
+                    <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                        <div class="w-full md:w-1/2">
+                            <label class="block text-[10px] font-black uppercase tracking-[0.2em] mb-3 opacity-70 italic">Définir mon budget total</label>
+                            <div class="relative">
+                                <input type="number" id="budgetInput" value="5000" oninput="calculerTesteurs()" 
+                                    class="w-full bg-white/10 border-2 border-white/20 p-5 rounded-2xl text-3xl font-black outline-none focus:border-white transition-all text-white placeholder:text-white/30">
+                                <span class="absolute right-5 top-1/2 -translate-y-1/2 text-xl font-bold opacity-50">F CFA</span>
+                            </div>
                         </div>
-                        <div class="space-y-2">
-                            <label class="text-sm font-bold text-slate-600 uppercase tracking-wider ml-1">URL de destination</label>
-                            <input type="url" id="siteUrl" placeholder="https://..." class="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-indigo-500 rounded-2xl outline-none transition-all italic">
+                        <div class="text-center md:text-right">
+                            <p class="text-[10px] font-black uppercase tracking-[0.2em] mb-1 opacity-70 italic">Capacité estimée</p>
+                            <div class="flex items-baseline justify-center md:justify-end gap-2">
+                                <span id="nbTesteursResult" class="text-6xl font-black tracking-tighter">12</span>
+                                <span class="text-lg font-bold opacity-80">Testeurs</span>
+                            </div>
+                            <p class="text-[10px] mt-2 font-medium opacity-60">* Frais de service (25%) déjà déduits</p>
                         </div>
                     </div>
+                </div>
 
-                    <!-- CALCULATEUR DE BUDGET -->
-                    <div class="bg-indigo-50 p-8 rounded-3xl border-2 border-indigo-100 mb-8">
-                        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                            <div class="flex-1 w-full">
-                                <label class="text-sm font-bold text-indigo-900 uppercase tracking-wider ml-1">Budget Total (F CFA)</label>
-                                <input type="number" id="budgetInput" value="5000" oninput="calculerTesteurs()" class="w-full mt-2 p-4 bg-white border-2 border-indigo-200 rounded-2xl outline-none text-2xl font-black text-indigo-600">
-                            </div>
-                            <div class="text-center md:text-right">
-                                <p class="text-slate-500 text-sm font-bold uppercase italic">Nombre de testeurs</p>
-                                <p id="nbTesteursResult" class="text-5xl font-black text-slate-800">12</p>
-                                <p class="text-xs text-slate-400 mt-1 italic">(Frais plateforme 25% inclus)</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button onclick="lancerMission()" class="w-full bg-slate-800 text-white py-5 rounded-2xl font-black text-xl hover:bg-slate-900 transition shadow-xl shadow-slate-200 flex items-center justify-center gap-4">
-                        ENVOYER POUR VALIDATION <i class="fas fa-paper-plane"></i>
-                    </button>
-                </section>
+                <button onclick="lancerMission()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-lg hover:bg-indigo-600 transition-all shadow-xl shadow-slate-200 flex items-center justify-center gap-3 active:scale-95">
+                    PUBLIER LA MISSION <i class="fas fa-bolt text-yellow-400"></i>
+                </button>
             </div>
+        </div>
 
-            <!-- COLONNE DROITE : ÉTAT DES MISSIONS -->
-            <div class="space-y-6">
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                    <h3 class="font-bold text-slate-700 border-b pb-4 mb-4">Mes campagnes actives</h3>
-                    <div id="mesMissionsList" class="space-y-4">
-                        <p class="text-sm text-slate-400 italic">Aucune mission en cours.</p>
-                    </div>
+        <!-- SECTION DROITE : HISTORIQUE -->
+        <div class="space-y-6">
+            <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 min-h-[400px]">
+                <h3 class="font-black text-slate-800 text-sm uppercase tracking-widest border-b pb-4 mb-6 flex items-center justify-between">
+                    Mes Campagnes
+                    <span class="bg-slate-100 text-slate-400 text-[10px] px-2 py-0.5 rounded-full" id="countMissions">0</span>
+                </h3>
+                <div id="mesMissionsList" class="space-y-4">
+                    <p class="text-center py-10 text-slate-300 italic text-sm">Aucune campagne active.</p>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- FENÊTRE MODALE : DÉTAILS DU TEST (Formulaire reçu) -->
-    <div id="modalRapport" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-[100] hidden p-4">
-        <div class="bg-white max-w-lg w-full rounded-[2rem] p-10 shadow-2xl relative">
-            <button onclick="fermerRapport()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
+    <!-- MODAL : DÉTAILS DU RAPPORT -->
+    <div id="modalRapport" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md hidden flex items-center justify-center z-[100] p-4">
+        <div class="bg-white w-full max-w-lg rounded-[2.5rem] p-10 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-indigo-600"></div>
+            <button onclick="fermerRapport()" class="absolute top-6 right-6 text-slate-300 hover:text-slate-900 text-3xl">&times;</button>
+            
             <div id="rapportContent">
                 <!-- Injecté par JS -->
             </div>
         </div>
     </div>
 
+    <!-- JS Scindé -->
     <script src="app.js"></script>
 </body>
 </html>
