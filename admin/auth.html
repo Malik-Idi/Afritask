@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion Sécurisée | Admin Afritask</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
+    <style>
+        body { background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%); }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6 text-slate-200">
+
+    <div class="max-w-md w-full glass-panel p-10 rounded-[2.5rem] shadow-2xl">
+        <div class="text-center mb-10">
+            <div class="w-20 h-20 bg-indigo-600 rounded-2xl flex items-center justify-center text-white text-3xl mx-auto mb-6 shadow-2xl shadow-indigo-500/20 ring-4 ring-indigo-500/10">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <h1 class="text-3xl font-black tracking-tighter text-white italic underline decoration-indigo-500 decoration-4">ADMIN PANEL</h1>
+            <p class="text-slate-400 mt-3 text-sm font-medium">Accès réservé au propriétaire du simulateur.</p>
+        </div>
+
+        <form id="adminLoginForm" class="space-y-6">
+            <div class="space-y-2">
+                <label class="text-[10px] font-black uppercase tracking-widest text-indigo-400 ml-1">Identifiant Propriétaire</label>
+                <input type="text" id="adminName" required placeholder="Nom complet" 
+                    class="w-full p-4 bg-slate-800/50 border-2 border-slate-700 focus:border-indigo-500 rounded-2xl outline-none transition-all text-white">
+            </div>
+
+            <div class="space-y-2 relative">
+                <label class="text-[10px] font-black uppercase tracking-widest text-indigo-400 ml-1">Clef d'Accès</label>
+                <input type="password" id="adminPass" required placeholder="••••••••••••" 
+                    class="w-full p-4 bg-slate-800/50 border-2 border-slate-700 focus:border-indigo-500 rounded-2xl outline-none transition-all text-white">
+            </div>
+
+            <div id="errorMsg" class="text-red-400 text-xs font-bold text-center hidden animate-pulse">
+                ❌ Identifiants incorrects. Accès refusé.
+            </div>
+
+            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-5 rounded-2xl font-black text-lg transition-all shadow-xl shadow-indigo-900/40 flex items-center justify-center gap-3">
+                DÉVERROUILLER LE PANEL <i class="fas fa-unlock"></i>
+            </button>
+        </form>
+
+        <div class="mt-10 text-center">
+            <a href="../index.html" class="text-slate-500 hover:text-white text-xs font-bold uppercase tracking-tighter transition">
+                <i class="fas fa-arrow-left mr-2"></i> Retour au site public
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Logique de connexion stricte
+        document.getElementById('adminLoginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const nameInput = document.getElementById('adminName').value;
+            const passInput = document.getElementById('adminPass').value;
+            const error = document.getElementById('errorMsg');
+
+            // LES IDENTIFIANTS REQUIS
+            if (nameInput === "Malik Idi" && passInput === "1234567890") {
+                // Création du Token de session (fictif)
+                sessionStorage.setItem('admin_logged_in', 'true');
+                sessionStorage.setItem('admin_session_start', new Date().getTime());
+                
+                alert("🔓 Accès accordé. Bienvenue Malik Idi.");
+                window.location.href = 'gestion.html';
+            } else {
+                error.classList.remove('hidden');
+                // Vibration visuelle du formulaire
+                document.querySelector('.glass-panel').classList.add('translate-x-2');
+                setTimeout(() => document.querySelector('.glass-panel').classList.remove('translate-x-2'), 100);
+            }
+        });
+
+        // Empêcher le retour en arrière une fois déconnecté
+        if (sessionStorage.getItem('admin_logged_in') === 'true') {
+            window.location.href = 'gestion.html';
+        }
+    </script>
+</body>
+</html>
