@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion Employeur | Afritask</title>
+    <!-- On garde le même fichier style.css pour la cohérence -->
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com">
+</head>
+<body class="bg-slate-50 flex items-center justify-center min-h-screen">
+
+    <div class="max-w-md w-full p-8 bg-white rounded-[2rem] shadow-2xl border border-slate-100">
+        <div class="text-center mb-10">
+            <div class="bg-indigo-600 w-16 h-16 rounded-2xl flex items-center justify-center text-white text-2xl mx-auto mb-4 shadow-lg shadow-indigo-200">
+                <i class="fas fa-briefcase"></i>
+            </div>
+            <h1 class="text-3xl font-black text-slate-800 tracking-tight">Espace Employeur</h1>
+            <p class="text-slate-500 mt-2 font-medium">Créez votre compte pour tester vos produits.</p>
+        </div>
+
+        <form id="authForm" class="space-y-6">
+            <div class="space-y-2">
+                <label class="text-sm font-bold text-slate-700 ml-1">Prénom</label>
+                <input type="text" id="prenom" required placeholder="Jean" 
+                    class="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-indigo-500 rounded-2xl outline-none transition-all">
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-sm font-bold text-slate-700 ml-1">Nom</label>
+                <input type="text" id="nom" required placeholder="Dupont" 
+                    class="w-full p-4 bg-slate-50 border-2 border-transparent focus:border-indigo-500 rounded-2xl outline-none transition-all">
+            </div>
+
+            <button type="submit" class="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 flex items-center justify-center gap-3">
+                CRÉER MON COMPTE <i class="fas fa-arrow-right"></i>
+            </button>
+        </form>
+
+        <div class="mt-8 text-center">
+            <p class="text-xs text-slate-400 uppercase font-bold tracking-widest">Afritask Business Solutions</p>
+        </div>
+    </div>
+
+    <script>
+        // Vérifier si l'utilisateur est déjà connecté
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = localStorage.getItem('employeur_user');
+            if (user) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+
+        // Gérer l'inscription
+        document.getElementById('authForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const userData = {
+                prenom: document.getElementById('prenom').value,
+                nom: document.getElementById('nom').value,
+                dateInscription: new Date().toLocaleDateString()
+            };
+
+            // Mémorisation des données
+            localStorage.setItem('employeur_user', JSON.stringify(userData));
+            
+            alert(`Bienvenue ${userData.prenom} ! Votre compte a été créé.`);
+            window.location.href = 'dashboard.html';
+        });
+    </script>
+</body>
+</html>
