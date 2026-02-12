@@ -1,0 +1,123 @@
+/* --- Variables Business --- */
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #3730a3;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --slate-50: #f8fafc;
+    --slate-100: #f1f5f9;
+    --slate-800: #1e293b;
+    --slate-900: #0f172a;
+}
+
+/* --- Reset & Base --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--slate-50);
+    color: var(--slate-800);
+    overflow-x: hidden;
+}
+
+/* --- Animations --- */
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-red {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* --- Notifications --- */
+#notifDropdown {
+    animation: slideDown 0.3s ease-out;
+}
+
+#notifBadge {
+    animation: pulse-red 2s infinite;
+}
+
+.notif-item {
+    transition: all 0.2s ease;
+    border-left: 4px solid transparent;
+}
+
+.notif-item:hover {
+    background-color: var(--slate-50);
+    border-left-color: var(--primary);
+}
+
+.notif-item.unread {
+    background-color: #eef2ff;
+}
+
+/* --- Cartes de Campagnes --- */
+.campaign-card {
+    transition: transform 0.2s ease, shadow 0.2s ease;
+}
+
+.campaign-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+
+/* Barre de progression animée */
+.progress-bar-fill {
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Calculateur --- */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#budgetInput {
+    caret-color: white;
+}
+
+/* --- Modale --- */
+#modalRapport {
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+}
+
+.rapport-bubble {
+    position: relative;
+    padding: 1.5rem;
+    background: var(--slate-50);
+    border-radius: 1.5rem;
+    font-style: italic;
+}
+
+.rapport-bubble::before {
+    content: '"';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 3rem;
+    color: #e2e8f0;
+    font-family: serif;
+    line-height: 1;
+}
+
+/* --- Responsive --- */
+@media (max-width: 640px) {
+    .main-container {
+        padding: 1rem;
+    }
+    
+    .nav-container {
+        padding: 0.5rem;
+    }
+}
