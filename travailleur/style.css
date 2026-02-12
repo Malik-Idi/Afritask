@@ -190,3 +190,16 @@ body {
     .sidebar-left, .sidebar-right { display: none; }
     .main-container { grid-template-columns: 1fr; }
 }
+
+.action-btn.like-active {
+    color: #1877f2 !important; /* Bleu Facebook */
+}
+
+.action-btn i {
+    margin-right: 6px;
+    transition: transform 0.2s ease;
+}
+
+.action-btn:active i {
+    transform: scale(1.4);
+}
