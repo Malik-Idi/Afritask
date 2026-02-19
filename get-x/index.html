@@ -1,59 +1,130 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <link crossorigin href='https://fonts.gstatic.com' rel='preconnect'/>
-    <link href="/assets/manifest.json?v=202602021" rel="manifest"/>
-    <meta content="#141414" name="theme-color"/>
-    <link as="font" crossorigin href="/icomoon.ttf?v=202602021" id="font-icon" rel="preload"/>
-    <meta content="default-src * gap://ready data:; img-src * 'self' data:; frame-src * blob:; style-src * 'unsafe-inline'; script-src * 'self' 'unsafe-inline' 'unsafe-eval'; "
-          http-equiv="Content-Security-Policy"/>
-    <base href="/"/>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable, target-densitydpi=device-dpi"
-          name="viewport"/>
-    <meta id="ogTitle" property="og:title" content="Sport Betting">
-    <meta id="ogDescription" property="og:description" content="Sport Betting | Come and play with us">
-    <meta id="ogImage" property="og:image" content="assets/facebook_image.png">
-    
-        <script async="" src="/scripts/scripts.jsgz.js?v=202602021-1770046495125"></script>
-    
-<link href="/idb/styles-base~f075b844.cssgz.css?24c27e120f353e0932d3" rel="preload stylesheet" async as="style"><link href="/idb/styles-base-theme~d5242bf9.cssgz.css?24c27e120f353e0932d3" rel="preload stylesheet" async as="style"></head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crash Game - GitHub Edition</title>
+    <style>
+        body { background: #1a1a2e; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
+        #game-container { position: relative; width: 800px; height: 400px; background: #16213e; border: 2px solid #e94560; border-radius: 10px; overflow: hidden; }
+        canvas { width: 100%; height: 100%; }
+        #ui { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; }
+        button { padding: 10px 20px; font-size: 18px; cursor: pointer; border: none; border-radius: 5px; background: #e94560; color: white; font-weight: bold; }
+        button:disabled { background: #555; }
+        #multiplier { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 60px; font-weight: bold; color: #00d2ff; text-shadow: 0 0 15px rgba(0,210,255,0.7); }
+        #balance { position: absolute; top: 10px; right: 20px; font-size: 20px; }
+    </style>
+</head>
 <body>
-<app-root>
-    <div class="au-m-spl">
-        <img class="au-m-spl-l" alt="" src="assets/loader.svg?v=202602021">
-        <div id="au-spinner" class="au-m-spl-l-s"></div>
-    </div>
-</app-root>
-<noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-123" height="0" width="0"
-            style="display:none;visibility:hidden"></iframe>
-</noscript>
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('workbox-sw.js').then(function () {
-      navigator.serviceWorker.addEventListener('message', function (event) {
-        var pageReloaded = localStorage.getItem('sw-page-reload') === 'true';
-        if (event.data.action === 'page-reload' && !pageReloaded) {
-          caches.keys().then(function (cacheNames) {
-            return Promise.all(cacheNames.map(function (cacheName) {
-              return caches.delete(cacheName);
-            }));
-          }).then(function () {
-            localStorage.clear();
-            localStorage.setItem('sw-page-reload', 'true');
-            window.location.reload();
-          });
-        }
-      });
-    });
-  }
 
-  if (Object.prototype.toString.call((window).operamini) === '[object OperaMini]') {
-    var spinner = document.getElementById('au-spinner');
-    spinner.classList.remove('au-m-spl-l-s');
-    spinner.classList.add('au-m-spl-om');
-  }
-</script>
-<script src="/gz/runtime.jsgz.js?24c27e120f353e0932d3" async></script><script src="/gz/polyfills_shims~f075b844.jsgz.js?24c27e120f353e0932d3" async nomodule></script><script src="/gz/polyfills_shims~216d6f1c.jsgz.js?24c27e120f353e0932d3" async nomodule></script><script src="/gz/polyfills_shims~7d359b94.jsgz.js?24c27e120f353e0932d3" async nomodule></script><script src="/gz/idb~f075b844.jsgz.js?24c27e120f353e0932d3" async></script><script src="/gz/idb~6542b42f.jsgz.js?24c27e120f353e0932d3" async></script><script src="/gz/idb~c3a789f3.jsgz.js?24c27e120f353e0932d3" async></script><script src="/gz/idb~4d1ddd24.jsgz.js?24c27e120f353e0932d3" async></script><script src="/gz/idb~6093a198.jsgz.js?24c27e120f353e0932d3" async></script><script src="/gz/idb~40d1372b.jsgz.js?24c27e120f353e0932d3" async></script><script src="/gz/idb~c5b24172.jsgz.js?24c27e120f353e0932d3" async></script><script src="/gz/idb~31ecd969.jsgz.js?24c27e120f353e0932d3" async></script><script src="/gz/idb~253ae210.jsgz.js?24c27e120f353e0932d3" async></script><script src="/gz/idb~74293347.jsgz.js?24c27e120f353e0932d3" async></script><script src="/gz/idb~1626c88b.jsgz.js?24c27e120f353e0932d3" async></script><script src="/gz/idb~594d4251.jsgz.js?24c27e120f353e0932d3" async></script><script src="/gz/idb~3d5efea1.jsgz.js?24c27e120f353e0932d3" async></script><script src="/gz/idb~1dc222c3.jsgz.js?24c27e120f353e0932d3" async></script><script src="/gz/idb~690b702c.jsgz.js?24c27e120f353e0932d3" async></script><script src="/gz/idb~77bf5e45.jsgz.js?24c27e120f353e0932d3" async></script><script src="/gz/idb~678f84af.jsgz.js?24c27e120f353e0932d3" async></script></body>
+    <div id="balance">Solde: <span id="cash">1000</span> €</div>
+
+    <div id="game-container">
+        <div id="multiplier">1.00x</div>
+        <canvas id="gameCanvas"></canvas>
+        <div id="ui">
+            <input type="number" id="betAmount" value="10" min="1" style="width: 60px; padding: 5px;">
+            <button id="btn-bet">PARIER</button>
+            <button id="btn-cashout" disabled>CASHOUT</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const multText = document.getElementById('multiplier');
+        const btnBet = document.getElementById('btn-bet');
+        const btnCashout = document.getElementById('btn-cashout');
+        const cashDisplay = document.getElementById('cash');
+
+        let balance = 1000;
+        let bet = 0;
+        let currentMult = 1.00;
+        let crashPoint = 0;
+        let gaming = false;
+        let animationId;
+        let startTime;
+
+        canvas.width = 800;
+        canvas.height = 400;
+
+        function drawCurve(time) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#00d2ff';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(50, 350);
+
+            for (let x = 0; x < time; x++) {
+                let y = 350 - Math.pow(x / 50, 2);
+                ctx.lineTo(50 + x, y);
+            }
+            ctx.stroke();
+            
+            // Dessiner la "fusée"
+            let rocketX = 50 + time;
+            let rocketY = 350 - Math.pow(time / 50, 2);
+            ctx.fillStyle = '#e94560';
+            ctx.beginPath();
+            ctx.arc(rocketX, rocketY, 8, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function gameLoop() {
+            if (!gaming) return;
+
+            let elapsed = (Date.now() - startTime) / 1000;
+            currentMult = Math.pow(1.1, elapsed * 2); // Logique de montée
+            multText.innerText = currentMult.toFixed(2) + "x";
+
+            drawCurve(elapsed * 40);
+
+            if (currentMult >= crashPoint) {
+                endGame(true);
+            } else {
+                animationId = requestAnimationFrame(gameLoop);
+            }
+        }
+
+        btnBet.onclick = () => {
+            bet = parseFloat(document.getElementById('betAmount').value);
+            if (bet > balance) return alert("Solde insuffisant");
+
+            balance -= bet;
+            cashDisplay.innerText = balance.toFixed(2);
+            
+            // Logique de crash (ex: 90% de chance de crash progressif)
+            crashPoint = Math.random() * 10 + 1.1; 
+            
+            gaming = true;
+            startTime = Date.now();
+            btnBet.disabled = true;
+            btnCashout.disabled = false;
+            multText.style.color = "#00d2ff";
+            gameLoop();
+        };
+
+        btnCashout.onclick = () => {
+            let win = bet * currentMult;
+            balance += win;
+            cashDisplay.innerText = balance.toFixed(2);
+            endGame(false);
+        };
+
+        function endGame(crashed) {
+            gaming = false;
+            cancelAnimationFrame(animationId);
+            btnBet.disabled = false;
+            btnCashout.disabled = true;
+
+            if (crashed) {
+                multText.innerText = "CRASH !";
+                multText.style.color = "red";
+            } else {
+                multText.innerText = currentMult.toFixed(2) + "x (Gagné!)";
+                multText.style.color = "green";
+            }
+        }
+    </script>
+</body>
 </html>
