@@ -1,1 +1,154 @@
 
+/* --- CONFIGURATION GÉNÉRALE --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #0b0e14; /* Fond très sombre */
+    color: #ffffff;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+/* --- AFFICHAGE DU SOLDE --- */
+#balance {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: 1px solid rgba(0, 210, 255, 0.3);
+    font-size: 1.1rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+#cash {
+    color: #00d2ff;
+}
+
+/* --- CONTENEUR PRINCIPAL DU JEU --- */
+#game-container {
+    position: relative;
+    width: 90vw;
+    max-width: 900px;
+    height: 500px;
+    background: radial-gradient(circle at center, #16213e 0%, #0b0e14 100%);
+    border-radius: 20px;
+    border: 2px solid #1f2833;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- ZONE D'ANIMATION (CANVAS) --- */
+canvas {
+    flex-grow: 1;
+    cursor: crosshair;
+}
+
+/* --- MULTIPLICATEUR CENTRAL --- */
+#multiplier {
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 5rem;
+    font-weight: 900;
+    color: #00d2ff;
+    text-shadow: 0 0 20px rgba(0, 210, 255, 0.6);
+    pointer-events: none; /* Ne gêne pas le clic */
+    transition: color 0.2s ease;
+}
+
+/* --- BARRE DE CONTRÔLE (BAS) --- */
+#ui {
+    background: #1a1a2e;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    border-top: 1px solid #1f2833;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+/* --- INPUTS ET BOUTONS --- */
+input[type="number"] {
+    background: #0b0e14;
+    border: 1px solid #1f2833;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    width: 100px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.3s;
+}
+
+input[type="number"]:focus {
+    border-color: #00d2ff;
+}
+
+button {
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#btn-bet {
+    background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+}
+
+#btn-bet:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 210, 255, 0.5);
+}
+
+#btn-cashout {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+}
+
+#btn-cashout:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.5);
+}
+
+button:disabled {
+    background: #333;
+    color: #777;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* --- EFFET DE CRASH --- */
+.crash-shake {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
+}
