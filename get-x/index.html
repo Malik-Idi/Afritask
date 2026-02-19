@@ -3,129 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crash Game - GitHub Edition</title>
-    <style>
-        body { background: #1a1a2e; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
-        #game-container { position: relative; width: 800px; height: 400px; background: #16213e; border: 2px solid #e94560; border-radius: 10px; overflow: hidden; }
-        canvas { width: 100%; height: 100%; }
-        #ui { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; }
-        button { padding: 10px 20px; font-size: 18px; cursor: pointer; border: none; border-radius: 5px; background: #e94560; color: white; font-weight: bold; }
-        button:disabled { background: #555; }
-        #multiplier { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 60px; font-weight: bold; color: #00d2ff; text-shadow: 0 0 15px rgba(0,210,255,0.7); }
-        #balance { position: absolute; top: 10px; right: 20px; font-size: 20px; }
-    </style>
+    <title>JetX Clone - GitHub Edition</title>
+    <!-- Lien vers ton fichier CSS avec l'orthographe demandée -->
+    <link rel="stylesheet" href="styl.css">
 </head>
 <body>
 
-    <div id="balance">Solde: <span id="cash">1000</span> €</div>
+    <!-- Affichage du Solde -->
+    <div id="balance">
+        SOLDE: <span id="cash">1000.00</span> €
+    </div>
 
+    <!-- Conteneur Principal -->
     <div id="game-container">
+        <!-- Historique des derniers crashs -->
+        <div id="history-bar">
+            <span class="history-label">HISTORIQUE:</span>
+            <div id="history-list"></div>
+        </div>
+
+        <!-- Multiplicateur Central -->
         <div id="multiplier">1.00x</div>
+        
+        <!-- Zone d'animation -->
         <canvas id="gameCanvas"></canvas>
+
+        <!-- Barre d'outils et commandes -->
         <div id="ui">
-            <input type="number" id="betAmount" value="10" min="1" style="width: 60px; padding: 5px;">
+            <div class="input-group">
+                <label for="betAmount">MISE</label>
+                <input type="number" id="betAmount" value="10" min="1" step="1">
+            </div>
+            
             <button id="btn-bet">PARIER</button>
             <button id="btn-cashout" disabled>CASHOUT</button>
         </div>
     </div>
 
-    <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const multText = document.getElementById('multiplier');
-        const btnBet = document.getElementById('btn-bet');
-        const btnCashout = document.getElementById('btn-cashout');
-        const cashDisplay = document.getElementById('cash');
-
-        let balance = 1000;
-        let bet = 0;
-        let currentMult = 1.00;
-        let crashPoint = 0;
-        let gaming = false;
-        let animationId;
-        let startTime;
-
-        canvas.width = 800;
-        canvas.height = 400;
-
-        function drawCurve(time) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = '#00d2ff';
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            ctx.moveTo(50, 350);
-
-            for (let x = 0; x < time; x++) {
-                let y = 350 - Math.pow(x / 50, 2);
-                ctx.lineTo(50 + x, y);
-            }
-            ctx.stroke();
-            
-            // Dessiner la "fusée"
-            let rocketX = 50 + time;
-            let rocketY = 350 - Math.pow(time / 50, 2);
-            ctx.fillStyle = '#e94560';
-            ctx.beginPath();
-            ctx.arc(rocketX, rocketY, 8, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        function gameLoop() {
-            if (!gaming) return;
-
-            let elapsed = (Date.now() - startTime) / 1000;
-            currentMult = Math.pow(1.1, elapsed * 2); // Logique de montée
-            multText.innerText = currentMult.toFixed(2) + "x";
-
-            drawCurve(elapsed * 40);
-
-            if (currentMult >= crashPoint) {
-                endGame(true);
-            } else {
-                animationId = requestAnimationFrame(gameLoop);
-            }
-        }
-
-        btnBet.onclick = () => {
-            bet = parseFloat(document.getElementById('betAmount').value);
-            if (bet > balance) return alert("Solde insuffisant");
-
-            balance -= bet;
-            cashDisplay.innerText = balance.toFixed(2);
-            
-            // Logique de crash (ex: 90% de chance de crash progressif)
-            crashPoint = Math.random() * 10 + 1.1; 
-            
-            gaming = true;
-            startTime = Date.now();
-            btnBet.disabled = true;
-            btnCashout.disabled = false;
-            multText.style.color = "#00d2ff";
-            gameLoop();
-        };
-
-        btnCashout.onclick = () => {
-            let win = bet * currentMult;
-            balance += win;
-            cashDisplay.innerText = balance.toFixed(2);
-            endGame(false);
-        };
-
-        function endGame(crashed) {
-            gaming = false;
-            cancelAnimationFrame(animationId);
-            btnBet.disabled = false;
-            btnCashout.disabled = true;
-
-            if (crashed) {
-                multText.innerText = "CRASH !";
-                multText.style.color = "red";
-            } else {
-                multText.innerText = currentMult.toFixed(2) + "x (Gagné!)";
-                multText.style.color = "green";
-            }
-        }
-    </script>
+    <!-- Script de logique de jeu -->
     <script src="script.js"></script>
+
+    <script>
+        // Petite fonction supplémentaire pour gérer l'historique visuellement
+        const historyList = document.getElementById('history-list');
+        
+        // On intercepte la fin du jeu pour mettre à jour l'historique
+        const originalFinishGame = window.finishGame;
+        window.finishGame = function(hasCrashed) {
+            // Appeler la fonction originale définie dans script.js
+            if (typeof originalFinishGame === "function") {
+                originalFinishGame(hasCrashed);
+            }
+
+            // Ajouter le score à l'historique
+            const scoreEntry = document.createElement('span');
+            scoreEntry.className = hasCrashed ? 'hist-crash' : 'hist-win';
+            scoreEntry.innerText = currentMult.toFixed(2) + 'x';
+            
+            historyList.prepend(scoreEntry); // Ajoute au début
+            if (historyList.children.length > 8) {
+                historyList.removeChild(historyList.lastChild);
+            }
+        };
+    </script>
 </body>
 </html>
