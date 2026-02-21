@@ -2,38 +2,55 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Mon Studio d'Animation 2D</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimStudio Pro - Maquette</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com"></script>
     <style>
-        #canvas-container { background-image: radial-gradient(#ccc 1px, transparent 1px); background-size: 20px 20px; }
+        .scroll-custom::-webkit-scrollbar { width: 5px; }
+        .scroll-custom::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        #canvas-parent { background-color: #eee; background-image: linear-gradient(45deg, #ddd 25%, transparent 25%, transparent 75%, #ddd 75%, #ddd), linear-gradient(45deg, #ddd 25%, transparent 25%, transparent 75%, #ddd 75%, #ddd); background-size: 20px 20px; background-position: 0 0, 10px 10px; }
     </style>
 </head>
-<body class="bg-gray-100 h-screen flex flex-col">
+<body class="bg-slate-900 h-screen flex flex-col text-slate-200">
 
-    <!-- Barre de navigation -->
-    <nav class="bg-blue-600 p-4 text-white flex justify-between">
-        <h1 class="font-bold">AnimStudio 2D</h1>
-        <button id="btn-export" class="bg-green-500 px-4 py-2 rounded hover:bg-green-600 transition">Exporter Vidéo</button>
-    </nav>
+    <!-- Header -->
+    <header class="h-14 border-b border-slate-700 flex items-center justify-between px-6 bg-slate-800">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-blue-500 rounded-lg"></div>
+            <span class="font-bold text-xl tracking-tight">ANIM<span class="text-blue-400">MAKER</span></span>
+        </div>
+        <div class="flex gap-3">
+            <button onclick="exportVideo()" class="bg-green-600 hover:bg-green-500 px-4 py-1.5 rounded-full text-sm font-medium transition">Exporter MP4</button>
+        </div>
+    </header>
 
     <div class="flex flex-1 overflow-hidden">
-        <!-- Barre latérale : Éléments -->
-        <aside class="w-64 bg-white border-r p-4 overflow-y-auto">
-            <h2 class="font-semibold mb-4 text-gray-700">Personnages</h2>
-            <div class="grid grid-cols-2 gap-2">
-                <div class="cursor-pointer border p-2 hover:bg-blue-50 text-center" onclick="addShape('rect')">□ Corps</div>
-                <div class="cursor-pointer border p-2 hover:bg-blue-50 text-center" onclick="addShape('circle')">○ Tête</div>
+        <!-- Sidebar Gauche (Outils) -->
+        <aside class="w-72 bg-slate-800 border-r border-slate-700 flex flex-col">
+            <div class="flex border-b border-slate-700 text-xs font-bold uppercase tracking-widest">
+                <button onclick="showTab('chars')" class="flex-1 py-3 border-b-2 border-blue-500">Persos</button>
+                <button onclick="showTab('bg')" class="flex-1 py-3 border-b-2 border-transparent opacity-50">Décors</button>
+                <button onclick="showTab('anim')" class="flex-1 py-3 border-b-2 border-transparent opacity-50">Anim</button>
             </div>
-            
-            <h2 class="font-semibold my-4 text-gray-700">Animations</h2>
-            <button onclick="startDance()" class="w-full bg-purple-100 text-purple-700 p-2 rounded mb-2 hover:bg-purple-200">Faire Danser</button>
+
+            <div id="panel-container" class="flex-1 overflow-y-auto p-4 scroll-custom">
+                <!-- Contenu dynamique injecté par JS -->
+            </div>
         </aside>
 
-        <!-- Zone de travail (Canvas) -->
-        <main class="flex-1 relative flex items-center justify-center p-10">
-            <div id="canvas-container" class="shadow-2xl border bg-white"></div>
+        <!-- Zone Centrale (Canvas) -->
+        <main id="canvas-parent" class="flex-1 flex items-center justify-center p-8 overflow-auto">
+            <div id="canvas-container" class="shadow-2xl bg-white overflow-hidden"></div>
         </main>
+
+        <!-- Sidebar Droite (Propriétés) -->
+        <aside class="w-64 bg-slate-800 border-l border-slate-700 p-4">
+            <h3 class="text-xs font-bold uppercase text-slate-500 mb-4">Calques & Objets</h3>
+            <div id="layers-list" class="space-y-2 text-sm text-slate-400">
+                <!-- Liste des objets ajoutés -->
+            </div>
+        </aside>
     </div>
 
     <script src="script.js"></script>
