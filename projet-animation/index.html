@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon Studio d'Animation 2D</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com"></script>
+    <style>
+        #canvas-container { background-image: radial-gradient(#ccc 1px, transparent 1px); background-size: 20px 20px; }
+    </style>
+</head>
+<body class="bg-gray-100 h-screen flex flex-col">
+
+    <!-- Barre de navigation -->
+    <nav class="bg-blue-600 p-4 text-white flex justify-between">
+        <h1 class="font-bold">AnimStudio 2D</h1>
+        <button id="btn-export" class="bg-green-500 px-4 py-2 rounded hover:bg-green-600 transition">Exporter Vidéo</button>
+    </nav>
+
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Barre latérale : Éléments -->
+        <aside class="w-64 bg-white border-r p-4 overflow-y-auto">
+            <h2 class="font-semibold mb-4 text-gray-700">Personnages</h2>
+            <div class="grid grid-cols-2 gap-2">
+                <div class="cursor-pointer border p-2 hover:bg-blue-50 text-center" onclick="addShape('rect')">□ Corps</div>
+                <div class="cursor-pointer border p-2 hover:bg-blue-50 text-center" onclick="addShape('circle')">○ Tête</div>
+            </div>
+            
+            <h2 class="font-semibold my-4 text-gray-700">Animations</h2>
+            <button onclick="startDance()" class="w-full bg-purple-100 text-purple-700 p-2 rounded mb-2 hover:bg-purple-200">Faire Danser</button>
+        </aside>
+
+        <!-- Zone de travail (Canvas) -->
+        <main class="flex-1 relative flex items-center justify-center p-10">
+            <div id="canvas-container" class="shadow-2xl border bg-white"></div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
